@@ -21,7 +21,9 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install blinker==1.7.0 --force-reinstall
 
       - name: Run Scraper & Send Email
         env:
