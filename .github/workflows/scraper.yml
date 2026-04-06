@@ -41,6 +41,11 @@ jobs:
         run: |
           python MD_Case_Search_GitHub_Ready.py
 
-      # Notice there is no 'git commit' step here.
-      # When this action finishes, the virtual server is destroyed, 
-      # so the generated .xlsx file is safely wiped without ever being committed to the repo!
+      # Skip the email entirely and upload the Excel file directly to GitHub!
+      - name: Upload Excel Output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Maryland-Case-Search-Results
+          path: '*.xlsx'
+          retention-days: 90
