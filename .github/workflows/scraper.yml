@@ -1,0 +1,44 @@
+name: Daily Maryland Case Scraper
+
+on:
+  schedule:
+    # Runs at 2:00 AM (UTC) every day. You can adjust this timing.
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows you to trigger the run manually from the GitHub website!
+
+jobs:
+  scrape-and-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Scraper & Send Email
+        env:
+          # Optional: You can put proxy credentials in GitHub Secrets, or just use the fallback in the script.
+          WEBSHARE_USER: ${{ secrets.WEBSHARE_USER }}
+          WEBSHARE_PASS: ${{ secrets.WEBSHARE_PASS }}
+          WEBSHARE_IP: ${{ secrets.WEBSHARE_IP }}
+          WEBSHARE_PORT: ${{ secrets.WEBSHARE_PORT }}
+
+          # CRITICAL: This MUST be set in GitHub Secrets to send the email!
+          SENDER_APP_PASSWORD: ${{ secrets.SENDER_APP_PASSWORD }}
+          # SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }} # Defaults to samp93178@gmail.com
+          # RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }} # Defaults to psantosh1999@gmail.com
+          
+        run: |
+          python MD_Case_Search_GitHub_Ready.py
+
+      # Notice there is no 'git commit' step here.
+      # When this action finishes, the virtual server is destroyed, 
+      # so the generated .xlsx file is safely wiped without ever being committed to the repo!
