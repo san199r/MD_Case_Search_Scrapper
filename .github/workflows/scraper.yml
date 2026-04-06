@@ -47,5 +47,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Maryland-Case-Search-Results
-          path: '*.xlsx'
+          path: .
           retention-days: 90
