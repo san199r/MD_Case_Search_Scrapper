@@ -65,7 +65,6 @@ print("Starting browser with Proxy in headless mode...")
 
 # Launch with Proxy Configuration
 driver = webdriver.Chrome(
-    service=Service(ChromeDriverManager().install()), 
     options=options,
     seleniumwire_options=proxy_options if proxy_options else None
 )
